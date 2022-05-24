@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"path/filepath"
 	"regexp"
-	"sync"
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/swaggo/swag"
@@ -72,8 +71,6 @@ func PersistAuthorization(persistAuthorization bool) func(*Config) {
 
 // WrapHandler wraps `http.Handler` into `gin.HandlerFunc`.
 func WrapHandler(handler *webdav.Handler, options ...func(*Config)) buffalo.Handler {
-	var once sync.Once
-
 	var config = Config{
 		URL:                      "doc.json",
 		DocExpansion:             "list",
@@ -107,10 +104,7 @@ func WrapHandler(handler *webdav.Handler, options ...func(*Config)) buffalo.Hand
 			return ctx.Error(http.StatusNotFound, errors.New("404 page not found"))
 		}
 		path := matches[2]
-
-		once.Do(func() {
-			handler.Prefix = matches[1]
-		})
+		handler.Prefix = matches[1]
 
 		switch filepath.Ext(path) {
 		case ".html":

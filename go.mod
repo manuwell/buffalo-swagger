@@ -1,4 +1,4 @@
-module github.com/swaggo/buffalo-swagger
+module github.com/manuwell/buffalo-swagger
 
 go 1.15
 
